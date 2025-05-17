@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./pension-calc
+
+      - name: Run lint
+        run: npm run lint
+        working-directory: ./pension-calc
+
+      - name: Run unit tests
+        run: npm test
+        working-directory: ./pension-calc
+
+      - name: Run Cypress E2E tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./pension-calc
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
+          wait-on-timeout: 60 
