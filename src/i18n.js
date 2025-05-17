@@ -52,32 +52,32 @@ const resources = {
       "lifeExpectancyTooltip": "Oczekiwana długość życia w miesiącach po przejściu na emeryturę w określonym docelowym wieku. Jest to kluczowy parametr do obliczenia wysokości miesięcznej emerytury: zgromadzony kapitał dzieli się przez tę liczbę miesięcy. Oficjalne tablice \"Średnie dalsze trwanie życia\" publikuje GUS.",
       "minimalPensionLabel": "Emerytura minimalna (PLN/mies.)",
       "minimalPensionTooltip": "Wprowadź aktualną wysokość ustalonej przez państwo minimalnej emerytury brutto miesięcznie w PLN. Jeśli obliczona na podstawie Twojego modelu emerytura okaże się niższa od tej kwoty, kalkulator pokaże emeryturę minimalną.",
-      "От 0 do 100": "Od 0 do 100",
-      "От 0 do 50": "Od 0 do 50",
+      "От 0 до 100": "Od 0 do 100",
+      "От 0 до 50": "Od 0 do 50",
       "От 50 do 80": "Od 50 do 80",
       "Должен быть больше текущего возраста": "Musi być wyższy niż obecny wiek",
       "От 1 до 600": "Od 1 do 600",
       "accordionPrinciplesTitle": "Główne zasady obliczeń:",
-      "accordionPrinciple1": "<strong>Gromadzenie kapitału:</strong> Twój kapitał emerytalny rośnie corocznie dzięki składkom (procent Twojego wynagrodzenia) i waloryzacji (dochód inwestycyjny).",
-      "accordionPrinciple2": "<strong>Podstawa wymiaru składek (ZUS):</strong> Roczne składki są obliczane od Twojego rocznego wynagrodzenia brutto. Jeśli posiadasz \"dochód twórczy\", 50% tej części dochodu (ale nie więcej niż 120 000 PLN rocznie takiej ulgi) nie podlega składkom ZUS, zmniejszając tym samym podstawę wymiaru składek emerytalnych.",
-      "accordionPrinciple3_1": "<strong>Wzór rocznego przyrostu kapitału:</strong>",
+      "accordionPrinciple1": "<0>Gromadzenie kapitału:</0> Twój kapitał emerytalny rośnie corocznie dzięki składkom (procent Twojego wynagrodzenia) i waloryzacji (dochód inwestycyjny).",
+      "accordionPrinciple2": "<0>Podstawa wymiaru składek (ZUS):</0> Roczne składki są obliczane od Twojego rocznego wynagrodzenia brutto. Jeśli posiadasz \"dochód twórczy\", 50% tej części dochodu (ale nie więcej niż 120 000 PLN rocznie takiej ulgi) nie podlega składkom ZUS, zmniejszając tym samym podstawę wymiaru składek emerytalnych.",
+      "accordionPrinciple3_1": "<0>Wzór rocznego przyrostu kapitału:</0>",
       "accordionPrinciple3_2_formula": "Bieżący kapitał = (Kapitał z poprzedniego roku * (1 + Stopa waloryzacji)) + Roczna składka emerytalna",
-      "accordionPrinciple4_1": "<strong>Roczna składka emerytalna:</strong>",
+      "accordionPrinciple4_1": "<0>Roczna składka emerytalna:</0>",
       "accordionPrinciple4_2_formula": "Podstawa wymiaru składek * Stawka składek emerytalnych",
-      "accordionPrinciple5": "<strong>Obliczanie miesięcznej emerytury:</strong> Po osiągnięciu wieku emerytalnego zgromadzony kapitał dzieli się przez oczekiwaną dalszą długość życia w miesiącach.",
-      "accordionPrinciple6": "<strong>Emerytura minimalna:</strong> Jeśli obliczona emerytura jest niższa od wskazanej minimalnej, wypłacana jest emerytura minimalna.",
-      "accordionPrinciple7": "<strong>Renta rodzinna (wdowia/wdowcza):</strong> Informacyjnie wyświetlane jest 85% obliczonej emerytury podstawowej.",
+      "accordionPrinciple5": "<0>Obliczanie miesięcznej emerytury:</0> Po osiągnięciu wieku emerytalnego zgromadzony kapitał dzieli się przez oczekiwaną dalszą długość życia w miesiącach.",
+      "accordionPrinciple6": "<0>Emerytura minimalna:</0> Jeśli obliczona emerytura jest niższa od wskazanej minimalnej, wypłacana jest emerytura minimalna.",
+      "accordionPrinciple7": "<0>Renta rodzinna (wdowia/wdowcza):</0> Informacyjnie wyświetlane jest 85% obliczonej emerytury podstawowej.",
       "accordionInputFieldsTitle": "Pola wprowadzania danych:",
-      "accordionInputField1": "<strong>Aktualny wiek (lata):</strong> Twój pełny wiek w momencie obliczeń.",
-      "accordionInputField2": "<strong>Miesiąc urodzenia:</strong> Używany do dokładniejszego obliczenia stażu i wieku.",
-      "accordionInputField3": "<strong>Początkowy zgromadzony kapitał emerytalny (PLN):</strong> Kwota już zgromadzona na Twoim koncie emerytalnym.",
-      "accordionInputField4": "<strong>Miesięczne wynagrodzenie brutto (PLN):</strong> Twoje obecne wynagrodzenie przed potrąceniem podatków i składek.",
-      "accordionInputField5": "<strong>Udział dochodów twórczych w wynagrodzeniu (%):</strong> Procent Twojego wynagrodzenia klasyfikowany jako dochód z działalności twórczej (np. prawa autorskie). 50% tej kwoty (ale nie więcej niż 120 000 PLN rocznie takiej ulgi podatkowej - KUP) jest zwolnione ze składek ZUS.",
-      "accordionInputField6": "<strong>Stawka składek emerytalnych (ZUS, %):</strong> Całkowity procent składek na ubezpieczenie emerytalne (udział pracownika + pracodawcy, domyślnie 19,52%).",
-      "accordionInputField7": "<strong>Prognozowana roczna waloryzacja kapitału (%):</strong> Oczekiwany roczny procent wzrostu Twoich oszczędności emerytalnych (np. z inwestycji funduszu, domyślnie 5%).",
-      "accordionInputField8": "<strong>Docelowy wiek przejścia na emeryturę (lata):</strong> Wiek, w którym planujesz przejść na emeryturę.",
-      "accordionInputField9": "<strong>Oczekiwana dalsza długość życia na emeryturze (miesiące):</strong> Liczba miesięcy, przez które przewidujesz pobieranie emerytury. Używana do obliczenia kwoty miesięcznej wypłaty ze zgromadzonego kapitału.",
-      "accordionInputField10": "<strong>Emerytura minimalna (PLN/mies.):</strong> Gwarantowana przez państwo minimalna wysokość emerytury.",
+      "accordionInputField1": "<0>Aktualny wiek (lata):</0> Twój pełny wiek w momencie obliczeń.",
+      "accordionInputField2": "<0>Miesiąc urodzenia:</0> Używany do dokładniejszego obliczenia stażu i wieku.",
+      "accordionInputField3": "<0>Początkowy zgromadzony kapitał emerytalny (PLN):</0> Kwota już zgromadzona na Twoim koncie emerytalnym.",
+      "accordionInputField4": "<0>Miesięczne wynagrodzenie brutto (PLN):</0> Twoje obecne wynagrodzenie przed potrąceniem podatków i składek.",
+      "accordionInputField5": "<0>Udział dochodów twórczych w wynagrodzeniu (%):</0> Procent Twojego wynagrodzenia klasyfikowany jako dochód z działalności twórczej (np. prawa autorskie). 50% tej kwoty (ale nie więcej niż 120 000 PLN rocznie takiej ulgi podatkowej - KUP) jest zwolnione ze składek ZUS.",
+      "accordionInputField6": "<0>Stawka składek emerytalnych (ZUS, %):</0> Całkowity procent składek na ubezpieczenie emerytalne (udział pracownika + pracodawcy, domyślnie 19,52%).",
+      "accordionInputField7": "<0>Prognozowana roczna waloryzacja kapitału (%):</0> Oczekiwany roczny procent wzrostu Twoich oszczędności emerytalnych (np. z inwestycji funduszu, domyślnie 5%).",
+      "accordionInputField8": "<0>Docelowy wiek przejścia na emeryturę (lata):</0> Wiek, w którym planujesz przejść na emeryturę.",
+      "accordionInputField9": "<0>Oczekiwana dalsza długość życia na emeryturze (miesiące):</0> Liczba miesięcy, przez które przewidujesz pobieranie emerytury. Używana do obliczenia kwoty miesięcznej wypłaty ze zgromadzonego kapitału.",
+      "accordionInputField10": "<0>Emerytura minimalna (PLN/mies.):</0> Gwarantowana przez państwo minimalna wysokość emerytury.",
       "capitalForecastTitle": "Prognoza zgromadzonego kapitału (do {{age}} lat)",
       "estimatedPensionResult_part1": "Przewidywana miesięczna emerytura przy przejściu w wieku {{age}} lat: ",
       "estimatedPensionResult_part2": " (brutto, przed opodatkowaniem emerytury)",
@@ -124,7 +124,63 @@ const resources = {
       "historyColCalculatedPensionTooltip": "Szacowana miesięczna emerytura",
       "chartTooltipCapitalLabel": "Kapitał (PLN)",
       "chartLegendAccumulatedCapital": "Zgromadzony kapitał (PLN)",
-      "chartLineNameAccumulatedCapital": "Zgromadzony kapitał"
+      "chartLineNameAccumulatedCapital": "Zgromadzony kapitał",
+      "form": {
+        "capitalModelInputsTitle": "Dane wejściowe dla modelu kapitałowego",
+        "birthYear": { "label": "Rok urodzenia" },
+        "birthMonth": { "label": "Miesiąc urodzenia" },
+        "workYears": { "label": "Poprzedni staż składek (lata)" },
+        "avgSalary": { "label": "Średnie wynagrodzenie (PLN)" },
+        "salaryType": {
+          "label": "Rodzaj wynagrodzenia",
+          "brutto": "Brutto",
+          "netto": "Netto"
+        },
+        "salaryPeriod": {
+          "label": "Okres wynagrodzenia",
+          "year": "Roczna",
+          "month": "Miesięczna"
+        },
+        "initialAccumulatedCapital": { "label": "Kapitał początkowy (PLN)" },
+        "copyrightPercentage": { "label": "Udział dochodów twórczych (%)" },
+        "pensionContributionRate": { "label": "Stawka składek emerytalnych (%)" },
+        "capitalIndexationRate": { "label": "Indeksacja kapitału (% rocznie)" },
+        "targetRetirementAge": { "label": "Docelowy wiek emerytalny" },
+        "lifeExpectancyAtTargetAgeMonths": { "label": "Przewidywana dł. życia (mies.)" },
+        "minimalPension": { "label": "Emerytura minimalna (PLN/mies.)" },
+        "inputSectionTitle": "Dane wejściowe"
+      },
+      "results": {
+        "title": "Wyniki",
+        "capitalAccumulationChartTitle": "Prognoza akumulacji kapitału",
+        "estimatedMonthlyPension": "Szacowana emerytura miesięczna",
+        "basedOnLifeExpectancy": "(na podstawie {{months}} mies. przewidywanej dł. życia)",
+        "estimatedWidowPension": "Szacowana renta wdowia",
+        "widowPensionNote": "(85% szacowanej emerytury)",
+        "yearByYearBreakdown": "Podział rok po roku"
+      },
+      "common": {
+        "monthly": "miesięcznie"
+      },
+      "history": {
+        "title": "Historia Obliczeń",
+        "fetchError": "Błąd ładowania historii."
+      },
+      "formError": {
+        "birthYear": { "range": "Rok urodzenia musi być między 1900 a {{currentYear}}." },
+        "targetRetirementAge": {
+          "tooLow": "Wiek emerytalny musi być wyższy niż obecny wiek.",
+          "outOfRange": "Wiek emerytalny musi być między 50 a 80 lat."
+        },
+        "workYears": { "range": "Staż pracy musi być między 0 a 80 lat." },
+        "avgSalary": { "negative": "Wynagrodzenie nie może być ujemne." },
+        "initialAccumulatedCapital": { "negative": "Kapitał początkowy nie może być ujemny." },
+        "copyrightPercentage": { "range": "Udział dochodów twórczych musi być między 0 a 100%." },
+        "pensionContributionRate": { "range": "Stawka składek musi być między 0 a 100%." },
+        "capitalIndexationRate": { "range": "Stopa indeksacji kapitału musi być między 0 a 50%." },
+        "lifeExpectancyAtTargetAgeMonths": { "range": "Przewidywana długość życia musi być między 1 a 600 miesięcy." },
+        "minimalPension": { "negative": "Emerytura minimalna nie może być ujemna." }
+      }
     }
   },
   en: {
@@ -137,7 +193,7 @@ const resources = {
       "historyEmpty": "Calculation history is empty.",
       "accordionExplanationTitle": "How is pension calculated in the capital model?",
       "saveStatusSuccess": "Saved!",
-      "saveStatusError": "Error!",
+      "saveStatusError": "Save Error!",
       "saveStatusErrorGeneral": "Save Error!",
       "birthYearLabel": "Birth Year",
       "birthYearTooltip": "Enter your full year of birth, e.g., 1985.",
@@ -173,32 +229,32 @@ const resources = {
       "lifeExpectancyTooltip": "Expected life expectancy in months after retiring at the specified target age. This is a key parameter for calculating the monthly pension amount: the accumulated capital is divided by this number of months. Official tables 'Średnie dalsze trwanie życia' (Average further life expectancy) are published by GUS.",
       "minimalPensionLabel": "Minimal pension (PLN/month)",
       "minimalPensionTooltip": "Enter the current amount of the state-guaranteed minimum gross monthly pension in PLN. If the pension calculated based on your model is lower than this amount, the calculator will show the minimum pension.",
-      "От 0 do 100": "From 0 to 100",
-      "От 0 do 50": "From 0 to 50",
-      "От 50 do 80": "From 50 to 80",
+      "От 0 до 100": "From 0 to 100",
+      "От 0 до 50": "From 0 to 50",
+      "От 50 до 80": "From 50 to 80",
       "Должен быть больше текущего возраста": "Must be greater than current age",
       "От 1 до 600": "From 1 to 600",
       "accordionPrinciplesTitle": "Main calculation principles:",
-      "accordionPrinciple1": "<strong>Capital accumulation:</strong> Your pension capital grows annually through contributions (a percentage of your salary) and indexation (investment income).",
-      "accordionPrinciple2": "<strong>Contribution base (ZUS):</strong> Annual contributions are calculated from your annual gross salary. If you have \"creative income\", 50% of this portion of income (but no more than 120,000 PLN per year of such relief) is not subject to ZUS contributions, thus reducing the base for pension contributions.",
-      "accordionPrinciple3_1": "<strong>Formula for annual capital increase:</strong>",
+      "accordionPrinciple1": "<0>Capital accumulation:</0> Your pension capital grows annually through contributions (a percentage of your salary) and indexation (investment income).",
+      "accordionPrinciple2": "<0>Contribution base (ZUS):</0> Annual contributions are calculated from your annual gross salary. If you have \"creative income\", 50% of this portion of income (but no more than 120,000 PLN per year of such relief) is not subject to ZUS contributions, thus reducing the base for pension contributions.",
+      "accordionPrinciple3_1": "<0>Formula for annual capital increase:</0>",
       "accordionPrinciple3_2_formula": "Current capital = (Previous year\'s capital * (1 + Indexation rate)) + Annual pension contribution",
-      "accordionPrinciple4_1": "<strong>Annual pension contribution:</strong>",
+      "accordionPrinciple4_1": "<0>Annual pension contribution:</0>",
       "accordionPrinciple4_2_formula": "Contribution base * Pension contribution rate",
-      "accordionPrinciple5": "<strong>Calculating monthly pension:</strong> Upon reaching retirement age, the accumulated capital is divided by the expected further life expectancy in months.",
-      "accordionPrinciple6": "<strong>Minimum pension:</strong> If the calculated pension is lower than the specified minimum, the minimum pension is paid.",
-      "accordionPrinciple7": "<strong>Survivor\'s pension (widow\'s/widower\'s):</strong> 85% of the calculated main pension is displayed for informational purposes.",
+      "accordionPrinciple5": "<0>Calculating monthly pension:</0> Upon reaching retirement age, the accumulated capital is divided by the expected further life expectancy in months.",
+      "accordionPrinciple6": "<0>Minimum pension:</0> If the calculated pension is lower than the specified minimum, the minimum pension is paid.",
+      "accordionPrinciple7": "<0>Survivor\'s pension (widow\'s/widower\'s):</0> 85% of the calculated main pension is displayed for informational purposes.",
       "accordionInputFieldsTitle": "Input Fields:",
-      "accordionInputField1": "<strong>Current age (years):</strong> Your full age at the time of calculation.",
-      "accordionInputField2": "<strong>Month of birth:</strong> Used for more accurate calculation of work duration and age.",
-      "accordionInputField3": "<strong>Initial accumulated pension capital (PLN):</strong> The amount already accumulated in your pension account.",
-      "accordionInputField4": "<strong>Monthly gross salary (PLN):</strong> Your current salary before taxes and contributions.",
-      "accordionInputField5": "<strong>Share of creative income in salary (%):</strong> The percentage of your salary classified as income from creative activities (e.g., copyrights). 50% of this amount (but no more than 120,000 PLN per year of such tax relief - KUP) is exempt from ZUS contributions.",
-      "accordionInputField6": "<strong>Pension contribution rate (ZUS, %):</strong> The total percentage of contributions for pension insurance (employee + employer share, default 19.52%).",
-      "accordionInputField7": "<strong>Projected annual capital indexation (%):</strong> The expected annual percentage growth of your pension savings (e.g., from fund investments, default 5%).",
-      "accordionInputField8": "<strong>Target retirement age (years):</strong> The age at which you plan to retire.",
-      "accordionInputField9": "<strong>Expected life expectancy on pension (months):</strong> The number of months you expect to receive a pension. Used to calculate the monthly payment amount from the accumulated capital.",
-      "accordionInputField10": "<strong>Minimum pension (PLN/month):</strong> The state-guaranteed minimum pension amount.",
+      "accordionInputField1": "<0>Current age (years):</0> Your full age at the time of calculation.",
+      "accordionInputField2": "<0>Month of birth:</0> Used for more accurate calculation of work duration and age.",
+      "accordionInputField3": "<0>Initial accumulated pension capital (PLN):</0> The amount already accumulated in your pension account.",
+      "accordionInputField4": "<0>Monthly gross salary (PLN):</0> Your current salary before taxes and contributions.",
+      "accordionInputField5": "<0>Share of creative income in salary (%):</0> The percentage of your salary classified as income from creative activities (e.g., copyrights). 50% of this amount (but no more than 120,000 PLN per year of such tax relief - KUP) is exempt from ZUS contributions.",
+      "accordionInputField6": "<0>Pension contribution rate (ZUS, %):</0> The total percentage of contributions for pension insurance (employee + employer share, default 19.52%).",
+      "accordionInputField7": "<0>Projected annual capital indexation (%):</0> The expected annual percentage growth of your pension savings (e.g., from fund investments, default 5%).",
+      "accordionInputField8": "<0>Target retirement age (years):</0> The age at which you plan to retire.",
+      "accordionInputField9": "<0>Expected life expectancy on pension (months):</0> The number of months you expect to receive a pension. Used to calculate the monthly payment amount from the accumulated capital.",
+      "accordionInputField10": "<0>Minimum pension (PLN/month):</0> The state-guaranteed minimum pension amount.",
       "capitalForecastTitle": "Accumulated Capital Forecast (up to age {{age}})",
       "estimatedPensionResult_part1": "Estimated monthly pension at retirement age {{age}}: ",
       "estimatedPensionResult_part2": " (gross, before pension taxes)",
@@ -245,7 +301,63 @@ const resources = {
       "historyColCalculatedPensionTooltip": "Estimated monthly pension",
       "chartTooltipCapitalLabel": "Capital (PLN)",
       "chartLegendAccumulatedCapital": "Accumulated Capital (PLN)",
-      "chartLineNameAccumulatedCapital": "Accumulated Capital"
+      "chartLineNameAccumulatedCapital": "Accumulated Capital",
+      "form": {
+        "capitalModelInputsTitle": "Input data for Capital Model",
+        "birthYear": { "label": "Birth Year" },
+        "birthMonth": { "label": "Birth Month" },
+        "workYears": { "label": "Previous contribution years" },
+        "avgSalary": { "label": "Average Salary (PLN)" },
+        "salaryType": {
+          "label": "Salary Type",
+          "brutto": "Gross",
+          "netto": "Net"
+        },
+        "salaryPeriod": {
+          "label": "Salary Period",
+          "year": "Annual",
+          "month": "Monthly"
+        },
+        "initialAccumulatedCapital": { "label": "Initial Accumulated Capital (PLN)" },
+        "copyrightPercentage": { "label": "Share of Creative Income (%)" },
+        "pensionContributionRate": { "label": "Pension Contribution Rate (%)" },
+        "capitalIndexationRate": { "label": "Capital Indexation Rate (% p.a.)" },
+        "targetRetirementAge": { "label": "Target Retirement Age" },
+        "lifeExpectancyAtTargetAgeMonths": { "label": "Life Expectancy (months)" },
+        "minimalPension": { "label": "Minimal Pension (PLN/month)" },
+        "inputSectionTitle": "Input Data"
+      },
+      "results": {
+        "title": "Results",
+        "capitalAccumulationChartTitle": "Capital Accumulation Forecast",
+        "estimatedMonthlyPension": "Estimated Monthly Pension",
+        "basedOnLifeExpectancy": "(based on {{months}} months of life expectancy)",
+        "estimatedWidowPension": "Estimated Widow's Pension",
+        "widowPensionNote": "(85% of estimated pension)",
+        "yearByYearBreakdown": "Year-by-Year Breakdown"
+      },
+      "common": {
+        "monthly": "monthly"
+      },
+      "history": {
+        "title": "Calculation History",
+        "fetchError": "Error loading history."
+      },
+      "formError": {
+        "birthYear": { "range": "Birth year must be between 1900 and {{currentYear}}." },
+        "targetRetirementAge": {
+          "tooLow": "Retirement age must be greater than current age.",
+          "outOfRange": "Retirement age must be between 50 and 80."
+        },
+        "workYears": { "range": "Work years must be between 0 and 80." },
+        "avgSalary": { "negative": "Salary cannot be negative." },
+        "initialAccumulatedCapital": { "negative": "Initial capital cannot be negative." },
+        "copyrightPercentage": { "range": "Share of creative income must be between 0 and 100%." },
+        "pensionContributionRate": { "range": "Contribution rate must be between 0 and 100%." },
+        "capitalIndexationRate": { "range": "Capital indexation rate must be between 0 and 50%." },
+        "lifeExpectancyAtTargetAgeMonths": { "range": "Life expectancy must be between 1 and 600 months." },
+        "minimalPension": { "negative": "Minimal pension cannot be negative." }
+      }
     }
   },
   ru: {
@@ -258,7 +370,7 @@ const resources = {
       "historyEmpty": "История расчетов пуста.",
       "accordionExplanationTitle": "Как рассчитывается пенсия в капитальной модели?",
       "saveStatusSuccess": "Сохранено!",
-      "saveStatusError": "Ошибка!",
+      "saveStatusError": "Ошибка сохранения!",
       "saveStatusErrorGeneral": "Ошибка сохранения!",
       "birthYearLabel": "Год рождения",
       "birthYearTooltip": "Введите ваш полный год рождения, например, 1985.",
@@ -266,8 +378,8 @@ const resources = {
       "birthMonthTooltip": "Выберите месяц вашего рождения.",
       "workYearsLabel": "Предыдущий стаж (лет)",
       "workYearsTooltip": "Количество лет, в течение которых вы уже делали пенсионные отчисления, что привело к вашему \"Начальному накопленному капиталу\". Это значение используется для контекста и расчета общего стажа в таблице вариантов.",
-      "Год от 1900 до {currentY}": "Год от 1900 до {currentY}", // This key seems to be a validation message, not a label/tooltip
-      "От 0 до 80": "От 0 до 80", // This key seems to be a validation message
+      "Год от 1900 до {currentY}": "Год от 1900 до {{currentYear}}",
+      "От 0 до 80": "От 0 до 80",
       "avgSalaryLabelMonth": "Ежемесячная зарплата (PLN)",
       "avgSalaryLabelYear": "Годовая зарплата (PLN)",
       "avgSalaryTooltip": "Введите вашу {{salaryPeriod}} зарплату {{salaryType}}.",
@@ -279,7 +391,7 @@ const resources = {
       "salaryTypeLabelNetto": "Нетто",
       "salaryPeriodLabelYear": "Годовая",
       "salaryPeriodLabelMonth": "Ежемесячная",
-      "Не может быть < 0": "Не может быть < 0", // This key seems to be a validation message
+      "Не может быть < 0": "Не может быть < 0",
       "initialCapitalLabel": "Начальный капитал (PLN)",
       "initialCapitalTooltip": "Введите сумму пенсионного капитала, который у вас уже накоплен на основном и субсчете в ZUS (если применимо). Эту информацию обычно можно найти в вашем онлайн-аккаунте PUE ZUS. Если вы только начинаете работать или не располагаете точной суммой, вы можете ввести 0; в этом случае прогноз будет строиться с нуля.",
       "copyrightPercentageLabel": "Доля творческого дохода в зарплате (%)",
@@ -294,32 +406,32 @@ const resources = {
       "lifeExpectancyTooltip": "Ожидаемая продолжительность жизни в месяцах после выхода на пенсию в указанном желаемом возрасте. Это ключевой параметр для расчета размера ежемесячной пенсии: накопленный капитал делится на это количество месяцев. Официальные таблицы \"Средняя дальнейшая продолжительность жизни\" публикует GUS.",
       "minimalPensionLabel": "Минимальная пенсия (PLN/мес.)",
       "minimalPensionTooltip": "Введите актуальный размер установленной государством минимальной пенсии брутто в месяц в PLN. Если рассчитанная по вашей модели пенсия окажется ниже этой суммы, калькулятор покажет минимальную пенсию.",
-      "От 0 до 100": "От 0 до 100", // This key seems to be a validation message
-      "От 0 до 50": "От 0 до 50", // This key seems to be a validation message
-      "От 50 do 80": "От 50 до 80", // This key seems to be a validation message
-      "Должен быть больше текущего возраста": "Должен быть больше текущего возраста", // This key seems to be a validation message
-      "От 1 до 600": "От 1 до 600", // This key seems to be a validation message
+      "От 0 до 100": "От 0 до 100",
+      "От 0 до 50": "От 0 до 50",
+      "От 50 до 80": "От 50 до 80",
+      "Должен быть больше текущего возраста": "Должен быть больше текущего возраста",
+      "От 1 до 600": "От 1 до 600",
       "accordionPrinciplesTitle": "Основные принципы расчета:",
-      "accordionPrinciple1": "<strong>Накопление капитала:</strong> Ваш пенсионный капитал ежегодно увеличивается за счет взносов (процент от вашей зарплаты) и валоризации (инвестиционный доход).",
-      "accordionPrinciple2": "<strong>База для начисления взносов (ZUS):</strong> Ежегодные взносы рассчитываются от вашей годовой зарплаты брутто. Если у вас есть \"творческий доход\", 50% этой части дохода (но не более 120 000 PLN в год такой льготы) не облагается взносами ZUS, тем самым уменьшая базу для пенсионных отчислений.",
-      "accordionPrinciple3_1": "<strong>Формула ежегодного прироста капитала:</strong>",
+      "accordionPrinciple1": "<0>Накопление капитала:</0> Ваш пенсионный капитал ежегодно увеличивается за счет взносов (процент от вашей зарплаты) и валоризации (инвестиционный доход).",
+      "accordionPrinciple2": "<0>База для начисления взносов (ZUS):</0> Ежегодные взносы рассчитываются от вашей годовой зарплаты брутто. Если у вас есть \"творческий доход\", 50% этой части дохода (но не более 120 000 PLN в год такой льготы) не облагается взносами ZUS, тем самым уменьшая базу для пенсионных отчислений.",
+      "accordionPrinciple3_1": "<0>Формула ежегодного прироста капитала:</0>",
       "accordionPrinciple3_2_formula": "Текущий капитал = (Капитал за предыдущий год * (1 + Ставка валоризации)) + Годовой пенсионный взнос",
-      "accordionPrinciple4_1": "<strong>Годовой пенсионный взнос:</strong>",
+      "accordionPrinciple4_1": "<0>Годовой пенсионный взнос:</0>",
       "accordionPrinciple4_2_formula": "База для начисления взносов * Ставка пенсионных взносов",
-      "accordionPrinciple5": "<strong>Расчет ежемесячной пенсии:</strong> По достижении пенсионного возраста накопленный капитал делится на ожидаемую дальнейшую продолжительность жизни в месяцах.",
-      "accordionPrinciple6": "<strong>Минимальная пенсия:</strong> Если рассчитанная пенсия ниже указанной минимальной, выплачивается минимальная пенсия.",
-      "accordionPrinciple7": "<strong>Пенсия по случаю потери кормильца (вдовья/вдовца):</strong> Информационно отображается 85% от рассчитанной основной пенсии.",
+      "accordionPrinciple5": "<0>Расчет ежемесячной пенсии:</0> По достижении пенсионного возраста накопленный капитал делится на ожидаемую дальнейшую продолжительность жизни в месяцах.",
+      "accordionPrinciple6": "<0>Минимальная пенсия:</0> Если рассчитанная пенсия ниже указанной минимальной, выплачивается минимальная пенсия.",
+      "accordionPrinciple7": "<0>Пенсия по случаю потери кормильца (вдовья/вдовца):</0> Информационно отображается 85% от рассчитанной основной пенсии.",
       "accordionInputFieldsTitle": "Поля ввода данных:",
-      "accordionInputField1": "<strong>Текущий возраст (лет):</strong> Ваш полный возраст на момент расчета.",
-      "accordionInputField2": "<strong>Месяц рождения:</strong> Используется для более точного расчета стажа и возраста.",
-      "accordionInputField3": "<strong>Начальный накопленный пенсионный капитал (PLN):</strong> Сумма, уже накопленная на вашем пенсионном счете.",
-      "accordionInputField4": "<strong>Ежемесячная зарплата брутто (PLN):</strong> Ваша текущая зарплата до вычета налогов и взносов.",
-      "accordionInputField5": "<strong>Доля творческого дохода в зарплате (%):</strong> Процент вашей зарплаты, классифицируемый как доход от творческой деятельности (например, авторские права). 50% от этой суммы (но не более 120 000 PLN в год такой налоговой льготы - KUP) освобождается от взносов ZUS.",
-      "accordionInputField6": "<strong>Ставка пенсионных взносов (ZUS, %):</strong> Общий процент взносов на пенсионное страхование (доля работника + работодателя, по умолчанию 19,52%).",
-      "accordionInputField7": "<strong>Прогнозируемая годовая валоризация капитала (%):</strong> Ожидаемый годовой процент роста ваших пенсионных накоплений (например, от инвестиций фонда, по умолчанию 5%).",
-      "accordionInputField8": "<strong>Желаемый возраст выхода на пенсию (лет):</strong> Возраст, в котором вы планируете выйти на пенсию.",
-      "accordionInputField9": "<strong>Ожидаемая продолжительность жизни на пенсии (месяцев):</strong> Количество месяцев, в течение которых вы предполагаете получать пенсию. Используется для расчета ежемесячной выплаты из накопленного капитала.",
-      "accordionInputField10": "<strong>Минимальная пенсия (PLN/мес.):</strong> Гарантированная государством минимальная сумма пенсии.",
+      "accordionInputField1": "<0>Текущий возраст (лет):</0> Ваш полный возраст на момент расчета.",
+      "accordionInputField2": "<0>Месяц рождения:</0> Используется для более точного расчета стажа и возраста.",
+      "accordionInputField3": "<0>Начальный накопленный пенсионный капитал (PLN):</0> Сумма, уже накопленная на вашем пенсионном счете.",
+      "accordionInputField4": "<0>Ежемесячная зарплата брутто (PLN):</0> Ваша текущая зарплата до вычета налогов и взносов.",
+      "accordionInputField5": "<0>Доля творческого дохода в зарплате (%):</0> Процент вашей зарплаты, классифицируемый как доход от творческой деятельности (например, авторские права). 50% от этой суммы (но не более 120 000 PLN в год такой налоговой льготы - KUP) освобождается от взносов ZUS.",
+      "accordionInputField6": "<0>Ставка пенсионных взносов (ZUS, %):</0> Общий процент взносов на пенсионное страхование (доля работника + работодателя, по умолчанию 19,52%).",
+      "accordionInputField7": "<0>Прогнозируемая годовая валоризация капитала (%):</0> Ожидаемый годовой процент роста ваших пенсионных накоплений (например, от инвестиций фонда, по умолчанию 5%).",
+      "accordionInputField8": "<0>Желаемый возраст выхода на пенсию (лет):</0> Возраст, в котором вы планируете выйти на пенсию.",
+      "accordionInputField9": "<0>Ожидаемая продолжительность жизни на пенсии (месяцев):</0> Количество месяцев, в течение которых вы предполагаете получать пенсию. Используется для расчета ежемесячной выплаты из накопленного капитала.",
+      "accordionInputField10": "<0>Минимальная пенсия (PLN/мес.):</0> Гарантированная государством минимальная сумма пенсии.",
       "capitalForecastTitle": "Прогноз накопленного капитала (до {{age}} лет)",
       "estimatedPensionResult_part1": "Предполагаемая ежемесячная пенсия при выходе в возрасте {{age}} лет: ",
       "estimatedPensionResult_part2": " (брутто, до налогообложения пенсии)",
@@ -366,7 +478,63 @@ const resources = {
       "historyColCalculatedPensionTooltip": "Оценочная ежемесячная пенсия",
       "chartTooltipCapitalLabel": "Капитал (PLN)",
       "chartLegendAccumulatedCapital": "Накопленный капитал (PLN)",
-      "chartLineNameAccumulatedCapital": "Накопленный капитал"
+      "chartLineNameAccumulatedCapital": "Накопленный капитал",
+      "form": {
+        "capitalModelInputsTitle": "Входные данные для капитальной модели",
+        "birthYear": { "label": "Год рождения" },
+        "birthMonth": { "label": "Месяц рождения" },
+        "workYears": { "label": "Предыдущий стаж (лет)" },
+        "avgSalary": { "label": "Средняя зарплата (PLN)" },
+        "salaryType": {
+          "label": "Тип зарплаты",
+          "brutto": "Брутто",
+          "netto": "Нетто"
+        },
+        "salaryPeriod": {
+          "label": "Период зарплаты",
+          "year": "Годовая",
+          "month": "Месячная"
+        },
+        "initialAccumulatedCapital": { "label": "Начальный накопленный капитал (PLN)" },
+        "copyrightPercentage": { "label": "Доля творческого дохода (%)" },
+        "pensionContributionRate": { "label": "Ставка пенсионных взносов (%)" },
+        "capitalIndexationRate": { "label": "Индексация капитала (% годовых)" },
+        "targetRetirementAge": { "label": "Целевой возраст выхода на пенсию" },
+        "lifeExpectancyAtTargetAgeMonths": { "label": "Ожидаемая прод. жизни (мес.)" },
+        "minimalPension": { "label": "Минимальная пенсия (PLN/мес.)" },
+        "inputSectionTitle": "Входные данные"
+      },
+      "results": {
+        "title": "Результаты",
+        "capitalAccumulationChartTitle": "Прогноз накопления капитала",
+        "estimatedMonthlyPension": "Предполагаемая месячная пенсия",
+        "basedOnLifeExpectancy": "(на основании {{months}} мес. ожидаемой прод. жизни)",
+        "estimatedWidowPension": "Предполагаемая пенсия по потере кормильца",
+        "widowPensionNote": "(85% от предполагаемой пенсии)",
+        "yearByYearBreakdown": "Разбивка по годам"
+      },
+      "common": {
+        "monthly": "ежемесячно"
+      },
+      "history": {
+        "title": "История расчетов",
+        "fetchError": "Ошибка загрузки истории."
+      },
+      "formError": {
+        "birthYear": { "range": "Год рождения должен быть между 1900 и {{currentYear}}." },
+        "targetRetirementAge": {
+          "tooLow": "Возраст выхода на пенсию должен быть больше текущего возраста.",
+          "outOfRange": "Возраст выхода на пенсию должен быть от 50 до 80 лет."
+        },
+        "workYears": { "range": "Стаж работы должен быть от 0 до 80 лет." },
+        "avgSalary": { "negative": "Зарплата не может быть отрицательной." },
+        "initialAccumulatedCapital": { "negative": "Начальный капитал не может быть отрицательным." },
+        "copyrightPercentage": { "range": "Доля творческого дохода должна быть от 0 до 100%." },
+        "pensionContributionRate": { "range": "Ставка взносов должна быть от 0 до 100%." },
+        "capitalIndexationRate": { "range": "Ставка индексации капитала должна быть от 0 до 50%." },
+        "lifeExpectancyAtTargetAgeMonths": { "range": "Ожидаемая продолжительность жизни должна быть от 1 до 600 месяцев." },
+        "minimalPension": { "negative": "Минимальная пенсия не может быть отрицательной." }
+      }
     }
   }
 };
