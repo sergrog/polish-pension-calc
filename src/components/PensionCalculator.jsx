@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, MenuItem, Select, InputLabel, FormControl, Radio, RadioGroup, FormControlLabel, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton, createTheme, ThemeProvider, Tooltip as MuiTooltip, useTheme, CircularProgress, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, MenuItem, Select, InputLabel, FormControl, Radio, RadioGroup, FormControlLabel, Grid, Accordion, AccordionSummary, AccordionDetails, IconButton, createTheme, ThemeProvider, Tooltip as MuiTooltip, useTheme, CircularProgress, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, FormLabel, Slider } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { supabase } from '../supabaseClient';
 import { calculateAccumulatedCapital, calculateRetirementOptionsWithCapital } from '../utils/calculations';
 import { debounce } from 'lodash';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 const polishPokemonNames = [
   "Pikachu", "Bulbasaur", "Charmander", "Squirtle", "Jigglypuff", "Meowth",
@@ -98,6 +99,23 @@ const PensionCalculator = () => {
         palette: {
           mode: darkMode ? 'dark' : 'light',
         },
+        components: { // Making all TextFields and Selects small by default in this theme scope
+          MuiTextField: {
+            defaultProps: {
+              size: 'small',
+            },
+          },
+          MuiSelect: {
+            defaultProps: {
+              size: 'small',
+            },
+          },
+          MuiFormControl: { // To ensure labels align well with small inputs
+            defaultProps: {
+              size: 'small',
+            }
+          }
+        }
       }),
     [darkMode],
   );
@@ -107,8 +125,7 @@ const PensionCalculator = () => {
   }, [darkMode]);
   
   const inputRefs = {
-    birthYear: useRef(null),
-    birthMonth: useRef(null),
+    birthMonth: useRef(null), // Restored for Select
     workYears: useRef(null), // This now refers to PAST work years for initial capital context
     avgSalary: useRef(null),
     initialAccumulatedCapital: useRef(null),
@@ -118,7 +135,6 @@ const PensionCalculator = () => {
     targetRetirementAge: useRef(null),
     lifeExpectancyAtTargetAgeMonths: useRef(null),
     minimalPension: useRef(null),
-    // spouseSalary: useRef(null), // Removed as per decision
   };
 
   const fetchHistory = useCallback(async () => {
@@ -325,32 +341,51 @@ const PensionCalculator = () => {
     debouncedCalculateAll(inputs);
   }, [inputs, debouncedCalculateAll]);
 
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-    const numericFields = ['birthYear', 'workYears', 'avgSalary', 'initialAccumulatedCapital', 'targetRetirementAge', 'lifeExpectancyAtTargetAgeMonths', 'minimalPension'];
-    const floatFields = ['copyrightPercentage', 'pensionContributionRate', 'capitalIndexationRate'];
-    let processedValue;
+  const handleChange = (e, newValue) => { // Modified for Slider compatibility
+    let name, value;
 
-    if (numericFields.includes(name)) {
-      processedValue = cleanNumberInput(value, false);
-    } else if (floatFields.includes(name)) {
-      processedValue = cleanNumberInput(value, true);
-    } else {
-      processedValue = value; // For non-numeric fields like select, radio
+    if (e.target && e.target.name) { // For standard inputs
+      name = e.target.name;
+      value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    } else if (typeof e === 'string') { // Custom handling for sliders if name is passed as first arg
+        name = e;
+        value = newValue;
     }
-    
-    // Length limits (can be removed if min/max validation is robust)
-    // if (name === 'birthYear' && processedValue.length > 4) processedValue = processedValue.slice(0, 4);
-    // if ((name === 'workYears' || name === 'targetRetirementAge') && processedValue.length > 2) processedValue = processedValue.slice(0, 2);
-    // if (name === 'lifeExpectancyAtTargetAgeMonths' && processedValue.length > 3) processedValue = processedValue.slice(0, 3);
- 
-    setInputs(prevInputs => ({
-      ...prevInputs,
-      [name]: (name === 'birthMonth' || numericFields.includes(name) || floatFields.includes(name)) && name !== 'scenario' && name !== 'salaryType' && name !== 'salaryPeriod' 
-              ? Number(processedValue) 
-              : processedValue,
-    }));
-    
+     // Fallback for sliders if name is not explicitly passed, check for common slider event structure
+    // This part might need adjustment based on how exactly slider onChange is called without a name
+    else if (e.name) { // If slider passes name in event object (less common for MUI slider direct value change)
+      name = e.name;
+      value = newValue;
+    }
+     else {
+      // This case should ideally not be hit if sliders are set up with a name identifier
+      // For now, let's assume it's a direct value change without a clear name from event
+      // This will break if multiple unnamed sliders are used.
+      // A better way is to wrap slider onChange: (event, val) => handleSliderChange('sliderName', val)
+      console.warn("Slider change event did not provide a clear input name. Update handleChange or slider onChange call.");
+      return; 
+    }
+
+
+    // Sanitize numeric inputs, allow float for specific fields
+    const floatFields = ['pensionContributionRate', 'capitalIndexationRate', 'avgSalary', 'initialAccumulatedCapital', 'minimalPension'];
+    const allowFloat = floatFields.includes(name);
+
+    // Check type of originating element if available (e.target might be null for slider)
+    const originalEventType = e.target ? e.target.type : null;
+
+    if (name === 'birthYear' || name === 'birthMonth' || name === 'workYears' || name === 'targetRetirementAge' || name === 'lifeExpectancyAtTargetAgeMonths' || name === 'copyrightPercentage' || (!allowFloat && (originalEventType === 'text' || originalEventType === 'number'))) {
+      value = cleanNumberInput(String(value), false); // Ensure value is string for cleanNumberInput
+    } else if (allowFloat && (originalEventType === 'text' || originalEventType === 'number')) {
+      value = cleanNumberInput(String(value), true); // Ensure value is string for cleanNumberInput
+    }
+    // For sliders, the value is already a number, no need to clean if it's one of the numeric slider fields
+    // But we still want to ensure it's a string for setInputs if cleanNumberInput was not called.
+    // However, birthYear and birthMonth are now numbers from slider.
+
+    setInputs(prev => ({ ...prev, [name]: Number(value) })); // Ensure value is number for these slider inputs
+
+    // Clear specific errors when user types or slides
     if (errors[name]) {
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
@@ -485,64 +520,195 @@ const PensionCalculator = () => {
 
   // Helper for rendering new input fields
   const renderCapitalModelInputs = () => (
-    <Grid container spacing={2} sx={{mt:1, mb:2}}>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('initialCapitalTooltip')}>
-          <TextField 
-            fullWidth 
-            label={t('initialCapitalLabel')} 
-            name="initialAccumulatedCapital" 
-            value={String(inputs.initialAccumulatedCapital)} 
-            onChange={handleChange} 
-            inputRef={inputRefs.initialAccumulatedCapital} 
-            type="number" 
-            inputProps={{ min: 0, step: 1000 }} 
-            error={!!errors.initialAccumulatedCapital} 
-            helperText={errors.initialAccumulatedCapital || ''} />
-        </MuiTooltip>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('copyrightPercentageTooltip')}>
-          <TextField fullWidth label={t('copyrightPercentageLabel')} name="copyrightPercentage" value={inputs.copyrightPercentage} onChange={handleChange} inputRef={inputRefs.copyrightPercentage} type="number" inputProps={{ min: 0, max: 100, step: 0.01 }} error={!!errors.copyrightPercentage} helperText={errors.copyrightPercentage || ''} />
-        </MuiTooltip>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('pensionContributionRateTooltip')}>
-          <TextField fullWidth label={t('pensionContributionRateLabel')} name="pensionContributionRate" value={inputs.pensionContributionRate} onChange={handleChange} inputRef={inputRefs.pensionContributionRate} type="number" inputProps={{ min: 0, max: 100, step: 0.01 }} error={!!errors.pensionContributionRate} helperText={errors.pensionContributionRate || ''} />
-        </MuiTooltip>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('capitalIndexationRateTooltip')}>
-          <TextField fullWidth label={t('capitalIndexationRateLabel')} name="capitalIndexationRate" value={inputs.capitalIndexationRate} onChange={handleChange} inputRef={inputRefs.capitalIndexationRate} type="number" inputProps={{ min: 0, max: 50, step: 0.01 }} error={!!errors.capitalIndexationRate} helperText={errors.capitalIndexationRate || ''} />
-        </MuiTooltip>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('targetRetirementAgeTooltip')}>
-          <TextField 
-            fullWidth 
-            label={t('targetRetirementAgeLabel')} 
-            name="targetRetirementAge" 
-            value={inputs.targetRetirementAge} 
-            onChange={handleChange} 
-            inputRef={inputRefs.targetRetirementAge} 
-            type="number" 
-            inputProps={{ min: 50, max: 80 }} // These are for input control, validation is separate
-            error={!!errors.targetRetirementAgeTooLow || !!errors.targetRetirementAgeOutOfRange} 
-            helperText={errors.targetRetirementAgeTooLow || errors.targetRetirementAgeOutOfRange || ''} 
+    <Paper elevation={2} sx={{ p: { xs: 1.5, sm: 2 }, mb: 2 }}>
+      <Typography variant="h6" gutterBottom sx={{ mb: 1.5, fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+        {t('form.capitalModelInputsTitle')}
+      </Typography>
+      <Grid container spacing={2.5}> {/* Increased spacing slightly for sliders */}
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl fullWidth error={!!errors.birthYear} sx={{ mt: 1 }}> {/* Added mt for spacing */}
+            <Typography gutterBottom id="birth-year-slider-label">
+              {t('form.birthYear.label')}: {inputs.birthYear}
+            </Typography>
+            <Slider
+              aria-labelledby="birth-year-slider-label"
+              name="birthYear" // Name for handleChange
+              value={Number(inputs.birthYear)}
+              onChange={(event, val) => handleChange('birthYear', val)} // Pass name and value
+              valueLabelDisplay="auto"
+              step={1}
+              marks
+              min={1970} // Changed min to 1970
+              max={new Date().getFullYear()}
+              // size="small" // Removed to make track thicker (default is medium)
+            />
+            {errors.birthYear && <Typography color="error" variant="caption" sx={{ mt: 0.5 }}>{errors.birthYear}</Typography>}
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl fullWidth error={!!errors.birthMonth} size="small"> {/* Ensure size small for consistency */}
+            <InputLabel id="birth-month-label">{t('form.birthMonth.label')}</InputLabel>
+            <Select 
+                labelId="birth-month-label" 
+                name="birthMonth" 
+                value={inputs.birthMonth} 
+                label={t('form.birthMonth.label')} 
+                onChange={handleChange} 
+                inputRef={inputRefs.birthMonth}
+                error={!!errors.birthMonth}
+            >
+              {MONTHS.map(opt => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
+            </Select>
+            {errors.birthMonth && <Typography color="error" variant="caption">{errors.birthMonth}</Typography>}
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.workYears.label')}
+            name="workYears"
+            type="number"
+            value={inputs.workYears}
+            onChange={handleChange}
+            inputRef={inputRefs.workYears}
+            error={!!errors.workYears}
+            helperText={errors.workYears}
+            InputProps={{ inputProps: { min: 0, max: 80 } }}
           />
-        </MuiTooltip>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.avgSalary.label')}
+            name="avgSalary"
+            type="number"
+            value={inputs.avgSalary}
+            onChange={handleChange}
+            inputRef={inputRefs.avgSalary}
+            error={!!errors.avgSalary}
+            helperText={errors.avgSalary}
+            InputProps={{ inputProps: { min: 0 } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl component="fieldset" fullWidth sx={{ mt: {xs: 1, sm: 0.5} }}>
+            <FormLabel component="legend" sx={{ mb: 0.5, fontSize: '0.8rem' }}>{t('form.salaryType.label')}</FormLabel>
+            <RadioGroup row name="salaryType" value={inputs.salaryType} onChange={handleChange}>
+              <FormControlLabel value="brutto" control={<Radio size="small" />} label={t('form.salaryType.brutto')} sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem'}}} />
+              <FormControlLabel value="netto" control={<Radio size="small" />} label={t('form.salaryType.netto')} sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem'}}} />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl component="fieldset" fullWidth sx={{ mt: {xs: 1, sm: 0.5} }}>
+            <FormLabel component="legend" sx={{ mb: 0.5, fontSize: '0.8rem' }}>{t('form.salaryPeriod.label')}</FormLabel>
+            <RadioGroup row name="salaryPeriod" value={inputs.salaryPeriod} onChange={handleChange}>
+              <FormControlLabel value="year" control={<Radio size="small" />} label={t('form.salaryPeriod.year')} sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem'}}} />
+              <FormControlLabel value="month" control={<Radio size="small" />} label={t('form.salaryPeriod.month')} sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.9rem'}}} />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+           <TextField
+            fullWidth
+            label={t('form.initialAccumulatedCapital.label')}
+            name="initialAccumulatedCapital"
+            type="number"
+            value={inputs.initialAccumulatedCapital}
+            onChange={handleChange}
+            inputRef={inputRefs.initialAccumulatedCapital}
+            error={!!errors.initialAccumulatedCapital}
+            helperText={errors.initialAccumulatedCapital}
+            InputProps={{ inputProps: { min: 0 } }}
+          />
+        </Grid>
+         <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.copyrightPercentage.label')}
+            name="copyrightPercentage"
+            type="number"
+            value={inputs.copyrightPercentage}
+            onChange={handleChange}
+            inputRef={inputRefs.copyrightPercentage}
+            error={!!errors.copyrightPercentage}
+            helperText={errors.copyrightPercentage}
+            InputProps={{ inputProps: { min: 0, max: 100 } }}
+            InputLabelProps={{ shrink: true }} 
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.pensionContributionRate.label')}
+            name="pensionContributionRate"
+            type="number"
+            value={inputs.pensionContributionRate}
+            onChange={handleChange}
+            inputRef={inputRefs.pensionContributionRate}
+            error={!!errors.pensionContributionRate}
+            helperText={errors.pensionContributionRate}
+            InputProps={{ inputProps: { min: 0, max: 100, step: "0.01" } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.capitalIndexationRate.label')}
+            name="capitalIndexationRate"
+            type="number"
+            value={inputs.capitalIndexationRate}
+            onChange={handleChange}
+            inputRef={inputRefs.capitalIndexationRate}
+            error={!!errors.capitalIndexationRate}
+            helperText={errors.capitalIndexationRate}
+            InputProps={{ inputProps: { min: 0, max: 100, step: "0.01" } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.targetRetirementAge.label')}
+            name="targetRetirementAge"
+            type="number"
+            value={inputs.targetRetirementAge}
+            onChange={handleChange}
+            inputRef={inputRefs.targetRetirementAge}
+            error={!!errors.targetRetirementAgeTooLow || !!errors.targetRetirementAgeOutOfRange}
+            helperText={errors.targetRetirementAgeTooLow || errors.targetRetirementAgeOutOfRange}
+            InputProps={{ inputProps: { min: 50, max: 80 } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.lifeExpectancyAtTargetAgeMonths.label')}
+            name="lifeExpectancyAtTargetAgeMonths"
+            type="number"
+            value={inputs.lifeExpectancyAtTargetAgeMonths}
+            onChange={handleChange}
+            inputRef={inputRefs.lifeExpectancyAtTargetAgeMonths}
+            error={!!errors.lifeExpectancyAtTargetAgeMonths}
+            helperText={errors.lifeExpectancyAtTargetAgeMonths}
+            InputProps={{ inputProps: { min: 1 } }}
+          />
+        </Grid>
+         <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            label={t('form.minimalPension.label')}
+            name="minimalPension"
+            type="number"
+            value={inputs.minimalPension}
+            onChange={handleChange}
+            inputRef={inputRefs.minimalPension}
+            error={!!errors.minimalPension}
+            helperText={errors.minimalPension}
+            InputProps={{ inputProps: { min: 0 } }}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('lifeExpectancyTooltip')}>
-          <TextField fullWidth label={t('lifeExpectancyLabel')} name="lifeExpectancyAtTargetAgeMonths" value={inputs.lifeExpectancyAtTargetAgeMonths} onChange={handleChange} inputRef={inputRefs.lifeExpectancyAtTargetAgeMonths} type="number" inputProps={{ min: 1, max: 600 }} error={!!errors.lifeExpectancyAtTargetAgeMonths} helperText={errors.lifeExpectancyAtTargetAgeMonths || ''} />
-        </MuiTooltip>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <MuiTooltip title={t('minimalPensionTooltip')}>
-          <TextField fullWidth label={t('minimalPensionLabel')} name="minimalPension" value={inputs.minimalPension} onChange={handleChange} inputRef={inputRefs.minimalPension} type="number" inputProps={{ min: 0, step: 10 }} error={!!errors.minimalPension} helperText={errors.minimalPension || ''}/>
-        </MuiTooltip>
-      </Grid>
-    </Grid>
+    </Paper>
   );
 
   // Функция для изменения языка
@@ -552,9 +718,27 @@ const PensionCalculator = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper elevation={3} sx={{ p: 3, maxWidth: 900, mx: 'auto', my: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h4" gutterBottom component="div">
+      <Paper 
+        elevation={0} 
+        sx={{
+          minHeight: '100vh', 
+          width: '100%', 
+          boxSizing: 'border-box', 
+          p: { xs: 1, sm: 2, md: 3 }, // Adjusted padding for better spacing control within the new max-width
+          backgroundColor: theme.palette.background.default,
+          // Apply maxWidth and centering for screens 'sm' and up
+          mx: 'auto', // Centers the Paper component itself if its width is less than 100%
+          maxWidth: {
+            xs: '100%', // Full width on extra-small screens
+            sm: '100%', // Full width on small screens (can adjust if needed)
+            md: theme.breakpoints.values.md, // e.g., 900px, or theme.breakpoints.values.lg for wider
+            lg: theme.breakpoints.values.lg, // e.g., 1200px
+            xl: theme.breakpoints.values.xl, // e.g., 1536px
+          },
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+          <Typography variant="h4" component="h1" sx={{ textAlign: 'center', flexGrow: 1, fontSize: { xs: '1.5rem', sm: '1.8rem', md: '2rem' } }}>
             {t('pensionCalculatorCapitalModelTitle')}
           </Typography>
           <Box>
@@ -566,95 +750,50 @@ const PensionCalculator = () => {
             </IconButton>
           </Box>
         </Box>
-        <Box sx={{ mb: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <MuiTooltip title={t('birthYearTooltip')}>
-                <TextField fullWidth label={t('birthYearLabel')} name="birthYear" value={inputs.birthYear} onChange={handleChange} /*inputRef={inputRefs.birthYear}*/ /*onKeyDown={e => handleKeyDown(e, 'birthYear')}*/ error={!!errors.birthYear} helperText={errors.birthYear || ''}/>
-              </MuiTooltip>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <MuiTooltip title={t('birthMonthTooltip')}>
-                <FormControl fullWidth error={!!errors.birthMonth}> {/* Added error prop possible here too if validating month */}
-                  <InputLabel id="birth-month-label">{t('birthMonthLabel')}</InputLabel>
-                  <Select labelId="birth-month-label" name="birthMonth" value={inputs.birthMonth} label={t('birthMonthLabel')} onChange={handleChange} /*inputRef={inputRefs.birthMonth}*/ /*onKeyDown={e => handleKeyDown(e, 'birthMonth')}*/>
-                    {MONTHS.map(opt => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))} {/* Month labels will remain in Russian for now, can be translated later if needed */}
-                  </Select>
-                  {errors.birthMonth && <Typography color="error" variant="caption">{errors.birthMonth}</Typography>}
-                </FormControl>
-              </MuiTooltip>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <MuiTooltip title={t('workYearsTooltip')}>
-                <TextField fullWidth label={t('workYearsLabel')} name="workYears" value={inputs.workYears} onChange={handleChange} /*inputRef={inputRefs.workYears} onKeyDown={e => handleKeyDown(e, 'workYears')}*/ error={!!errors.workYears} helperText={errors.workYears || ''} />
-              </MuiTooltip>
-            </Grid>
-             <Grid item xs={12} sm={8} md={5}>
-              <MuiTooltip title={t('avgSalaryTooltip', { 
-                salaryPeriod: inputs.salaryPeriod === 'year' ? t('salaryPeriodYearLocative') : t('salaryPeriodMonthLocative'), 
-                salaryType: inputs.salaryType === 'brutto' ? t('salaryTypeBruttoAccusative') : t('salaryTypeNettoAccusative') 
-              })}>
-                <TextField 
-                  fullWidth 
-                  label={inputs.salaryPeriod === 'year' ? t('avgSalaryLabelYear') : t('avgSalaryLabelMonth')} 
-                  name="avgSalary" 
-                  value={formatNumber(inputs.avgSalary)} 
-                  onChange={handleChange} 
-                  error={!!errors.avgSalary} 
-                  helperText={errors.avgSalary || ''}
-                />
-              </MuiTooltip>
-            </Grid>
-            <Grid item xs={12} sm={4} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
-              <FormControl>
-                <RadioGroup row name="salaryType" value={inputs.salaryType} onChange={handleChange}>
-                  <FormControlLabel value="brutto" control={<Radio size="small" />} label={t('salaryTypeLabelBrutto')} />
-                  <FormControlLabel value="netto" control={<Radio size="small" />} label={t('salaryTypeLabelNetto')} />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12} md={4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <FormControl>
-                <RadioGroup row name="salaryPeriod" value={inputs.salaryPeriod} onChange={handleChange}>
-                  <FormControlLabel value="year" control={<Radio size="small" />} label={t('salaryPeriodLabelYear')} />
-                  <FormControlLabel value="month" control={<Radio size="small" />} label={t('salaryPeriodLabelMonth')} />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-          
-          {/* Сценарий пока один, можно будет вернуть если понадобится выбор моделей */}
-          {/* <MuiTooltip title="Выберите сценарий/модель расчета пенсии.">
-            <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
-              <InputLabel id="scenario-label">Модель расчёта</InputLabel>
-              <Select labelId="scenario-label" name="scenario" value={inputs.scenario} label="Модель расчёта" onChange={handleChange}>
-                {SCENARIOS.map(opt => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
-              </Select>
-            </FormControl>
-          </MuiTooltip> */} 
 
+        <Box sx={{ mb: 2 }}>
           {inputs.scenario === 'capital_model' && renderCapitalModelInputs()}
 
-          {/* Spouse salary - temporarily hidden as it's not directly used in individual capital model yet */}
-          {/* {['widow', 'joint'].includes(inputs.scenario) && (...) } */}
-
-          <Button 
-            variant="contained" 
-            color={saveStatus === t('saveStatusSuccess') ? 'success' : (saveStatus === t('saveStatusError') || saveStatus === t('saveStatusErrorGeneral')) ? 'error' : 'primary'}
-            onClick={handleCalculateAndSave} 
-            fullWidth 
-            sx={{ mt:2, mb: 1 }}
-            disabled={saveStatus === t('saveStatusSuccess')}
-            startIcon={saveStatus === t('saveStatusSuccess') ? <CheckCircleOutlineIcon /> : null}
-          >
-            {saveStatus || t('calculateAndSaveButton')}
-          </Button>
-          <Button variant="outlined" color="secondary" onClick={clearForm} fullWidth>
-            {t('clearFormButton')}
-          </Button>
+          <Grid item xs={12}>
+            <Box sx={{ 
+              mt: 2, 
+              display: 'flex', 
+              flexDirection: { xs: 'column', sm: 'row' }, 
+              justifyContent: 'center', 
+              gap: { xs: 1, sm: 2 } 
+            }}>
+              <Button
+                variant="contained"
+                color={saveStatus === t('saveStatusSuccess') ? 'success' : (saveStatus === t('saveStatusError') || saveStatus === t('saveStatusErrorGeneral')) ? 'error' : 'primary'}
+                onClick={handleCalculateAndSave}
+                disabled={saveStatus === t('saveStatusSuccess')}
+                startIcon={saveStatus === 'loading' ? <CircularProgress size={20} color="inherit" /> : saveStatus === t('saveStatusSuccess') ? <CheckCircleOutlineIcon /> : null}
+                sx={{ 
+                  flexGrow: { sm: 1 }, 
+                  width: { xs: '100%', sm: 'auto' },
+                  minHeight: '40px'
+                }}
+              >
+                {saveStatus === 'loading' ? t('calculateAndSaveButton') : saveStatus || t('calculateAndSaveButton')}
+              </Button>
+              <Button 
+                variant="outlined" 
+                color="secondary" 
+                onClick={clearForm} 
+                startIcon={<RestartAltIcon />}
+                sx={{ 
+                  flexGrow: { sm: 1 }, 
+                  width: { xs: '100%', sm: 'auto' },
+                  minHeight: '40px'
+                }}
+              >
+                {t('clearFormButton')}
+              </Button>
+            </Box>
+          </Grid>
         </Box>
 
-        <Accordion sx={{ mt: 2, mb: 2 }}>
+        <Accordion sx={{ mt: 1.5, mb: 1.5 }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="pension-explanation-content"
@@ -663,31 +802,29 @@ const PensionCalculator = () => {
             <Typography variant="subtitle1">{t('accordionExplanationTitle')}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography variant="body2" component="div">
+            <Typography variant="body2" component="div" sx={{ '& ul': { pl: 2 }, '& li': { mb: 0.5 } }}>
               <p><strong>{t('accordionPrinciplesTitle')}</strong></p>
               <ul>
-                <li>{t('accordionPrinciple1')}</li>
-                <li>{t('accordionPrinciple2')}</li>
-                <li>{t('accordionPrinciple3_1')}<br />
-                  <code>{t('accordionPrinciple3_2_formula')}</code></li>
-                <li>{t('accordionPrinciple4_1')}<br />
-                  <code>{t('accordionPrinciple4_2_formula')}</code></li>
-                <li>{t('accordionPrinciple5')}</li>
-                <li>{t('accordionPrinciple6')}</li>
-                <li>{t('accordionPrinciple7')}</li>
+                <li><Trans i18nKey="accordionPrinciple1"><strong>Gromadzenie kapitału:</strong> Twój kapitał emerytalny rośnie corocznie dzięki składkom (procent Twojego wynagrodzenia) i waloryzacji (dochód inwestycyjny).</Trans></li>
+                <li><Trans i18nKey="accordionPrinciple2"><strong>Podstawa wymiaru składek (ZUS):</strong> Roczne składki są obliczane od Twojego rocznego wynagrodzenia brutto. Jeśli posiadasz "dochód twórczy", 50% tej części dochodu (ale nie więcej niż 120 000 PLN rocznie takiej ulgi) nie podlega składkom ZUS, zmniejszając tym samym podstawę wymiaru składek emerytalnych.</Trans></li>
+                <li><Trans i18nKey="accordionPrinciple3_1"><strong>Wzór rocznego przyrostu kapitału:</strong></Trans><br /><code>{t('accordionPrinciple3_2_formula')}</code></li>
+                <li><Trans i18nKey="accordionPrinciple4_1"><strong>Roczna składka emerytalna:</strong></Trans><br /><code>{t('accordionPrinciple4_2_formula')}</code></li>
+                <li><Trans i18nKey="accordionPrinciple5"><strong>Obliczanie miesięcznej emerytury:</strong> Po osiągnięciu wieku emerytalnego zgromadzony kapitał dzieli się przez oczekiwaną dalszą długość życia w miesiącach.</Trans></li>
+                <li><Trans i18nKey="accordionPrinciple6"><strong>Emerytura minimalna:</strong> Jeśli obliczona emerytura jest niższa od wskazanej minimalnej, wypłacana jest emerytura minimalna.</Trans></li>
+                <li><Trans i18nKey="accordionPrinciple7"><strong>Renta rodzinna (wdowia/wdowcza):</strong> Informacyjnie wyświetlane jest 85% obliczonej emerytury podstawowej.</Trans></li>
               </ul>
-              <p><strong>{t('accordionInputFieldsTitle')}</strong></p>
+              <p style={{marginTop: '16px'}}><strong>{t('accordionInputFieldsTitle')}</strong></p>
               <ul>
-                <li>{t('accordionInputField1')}</li>
-                <li>{t('accordionInputField2')}</li>
-                <li>{t('accordionInputField3')}</li>
-                <li>{t('accordionInputField4')}</li>
-                <li>{t('accordionInputField5')}</li>
-                <li>{t('accordionInputField6')}</li>
-                <li>{t('accordionInputField7')}</li>
-                <li>{t('accordionInputField8')}</li>
-                <li>{t('accordionInputField9')}</li>
-                <li>{t('accordionInputField10')}</li>
+                <li><Trans i18nKey="accordionInputField1"><strong>Aktualny wiek (lata):</strong> Twój pełny wiek w momencie obliczeń.</Trans></li>
+                <li><Trans i18nKey="accordionInputField2"><strong>Miesiąc urodzenia:</strong> Używany do dokładniejszego obliczenia stażu i wieku.</Trans></li>
+                <li><Trans i18nKey="accordionInputField3"><strong>Początkowy zgromadzony kapitał emerytalny (PLN):</strong> Kwota już zgromadzona na Twoim koncie emerytalnym.</Trans></li>
+                <li><Trans i18nKey="accordionInputField4"><strong>Miesięczne wynagrodzenie brutto (PLN):</strong> Twoje obecne wynagrodzenie przed potrąceniem podatków i składek.</Trans></li>
+                <li><Trans i18nKey="accordionInputField5"><strong>Udział dochodów twórczych w wynagrodzeniu (%):</strong> Procent Twojego wynagrodzenia klasyfikowany jako dochód z działalności twórczej (np. prawa autorskie). 50% tej kwoty (ale nie więcej niż 120 000 PLN rocznie takiej ulgi podatkowej - KUP) jest zwolnione ze składek ZUS.</Trans></li>
+                <li><Trans i18nKey="accordionInputField6"><strong>Stawka składek emerytalnych (ZUS, %):</strong> Całkowity procent składek na ubezpieczenie emerytalne (udział pracownika + pracodawcy, domyślnie 19,52%).</Trans></li>
+                <li><Trans i18nKey="accordionInputField7"><strong>Prognozowana roczna waloryzacja kapitału (%):</strong> Oczekiwany roczny procent wzrostu Twoich oszczędności emerytalnych (np. z inwestycji funduszu, domyślnie 5%).</Trans></li>
+                <li><Trans i18nKey="accordionInputField8"><strong>Docelowy wiek przejścia na emeryturę (lata):</strong> Wiek, w którym planujesz przejść na emeryturę.</Trans></li>
+                <li><Trans i18nKey="accordionInputField9"><strong>Oczekiwana dalsza długość życia na emeryturze (miesiące):</strong> Liczba miesięcy, przez które przewidujesz pobieranie emerytury. Używana do obliczenia kwoty miesięcznej wypłaty ze zgromadzonego kapitału.</Trans></li>
+                <li><Trans i18nKey="accordionInputField10"><strong>Emerytura minimalna (PLN/mies.):</strong> Gwarantowana przez państwo minimalna wysokość emerytury.</Trans></li>
               </ul>
             </Typography>
           </AccordionDetails>
@@ -792,9 +929,6 @@ const PensionCalculator = () => {
           </Box>
         )}
         
-        {/* Display for old model if scenario was different (currently commented out) */}
-        {/* {inputs.scenario !== 'capital_model' && prediction && (...) } */}
-
         {history.length > 0 && (
           <Box sx={{ mt: 4 }}>
             <Typography variant="h6" gutterBottom>{t('historyTableTitle')}</Typography>
