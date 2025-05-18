@@ -166,37 +166,76 @@ const PensionCalculator = () => {
 
   const cleanNumberInput = useCallback((val, allowFloat = false) => {
     if (typeof val === 'string') {
+      let processedVal = val;
       if (allowFloat) {
-        val = val.replace(/,/g, '.'); // Replace comma with dot for float conversion
+        processedVal = processedVal.replace(/,/g, '.'); // Replace comma with dot
       }
-      val = val.replace(allowFloat ? /[^\d.]/g : /[^\d]/g, ''); // Remove non-allowed chars
+      // Remove non-allowed characters (non-digits, and non-dot if float)
+      processedVal = processedVal.replace(allowFloat ? /[^\d.]/g : /[^\d]/g, '');
+
       if (allowFloat) {
-        const parts = val.split('.');
-        if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); // Keep only first dot
-      }
-      
-      val = val.replace(/^0+(?!$|\.)/, ''); // Removes leading zeros from integer part, e.g. "007" -> "7", "0.5" -> ".5"
-      
-      if (allowFloat && val.startsWith('.')) { // If it's like ".5" after stripping leading zeros
-        val = '0' + val; // Make it "0.5"
+        const parts = processedVal.split('.');
+        let integerPart = parts[0];
+        // Handle multiple dots by taking only the first fractional part
+        const fractionalPart = parts.length > 1 ? parts[1] : null; // only take content after the first dot
+
+        // Sanitize integer part: "00" -> "0", "07" -> "7", "" -> "0" (e.g. if original was just ".")
+        if (integerPart.length > 1 && integerPart.startsWith('0')) {
+          integerPart = integerPart.replace(/^0+/, ''); // "00" -> "", "07" -> "7"
+        }
+        if (integerPart === '' && (fractionalPart !== null || processedVal.includes('.'))) { 
+          // If original was ".5", integerPart is "", make it "0"
+          // If original was ".", integerPart is "", make it "0"
+          integerPart = '0';
+        } else if (integerPart === '') {
+          // If original was e.g. "abc" or "00" (non-float) leading to ""
+          integerPart = '0';
+        }
+
+
+        if (fractionalPart !== null) {
+          // Reconstruct with the single fractional part
+          processedVal = integerPart + '.' + fractionalPart; 
+        } else {
+          processedVal = integerPart;
+        }
+        // If the input was just a ".", it becomes "0." now. e.g. "." -> parts=["",""], int="0", frac="", procVal="0."
+        if (val === '.' && processedVal === '0') { // Specifically handle if user types only "."
+            processedVal = '0.';
+        }
+
+      } else { // Not allowFloat
+        if (processedVal.length > 1 && processedVal.startsWith('0')) {
+          processedVal = processedVal.replace(/^0+/, '');
+        }
+        if (processedVal === '') {
+          processedVal = '0';
+        }
       }
 
-      // If it became empty, or for non-floats it's just a dot, or for floats it's just "0." (from "."), set to "0" or "0."
-      if (val === '') {
-        val = '0';
-      } else if (!allowFloat && val === '.') {
-        val = '0';
-      } else if (allowFloat && val === '.') { // If user typed only a dot, and it passed through.
-        val = '0.'; // Canonical representation for starting a float.
+      // Final check if processedVal somehow ended up empty (e.g. from non-float, non-digit input)
+      // or if it's a dot in a non-float context (should be stripped but as safeguard)
+      if (processedVal === '') {
+          processedVal = '0';
+      } else if (!allowFloat && processedVal === '.') {
+          processedVal = '0';
       }
-      // If val is "0." from previous step, it remains "0."
-      // If val is "0.5" from previous step, it remains "0.5"
-      
+      // Ensure "0." for initial dot in float field, but not "0.0" from "00."
+      if (allowFloat && val.endsWith('.') && !processedVal.endsWith('.')) {
+        if (Number(processedVal) === 0 && val === '.') { // val was exactly "."
+             processedVal = "0.";
+        } else if (Number(processedVal) !== 0 || val.length > 1) { // val was "5." or "0."
+            // if initial val was "0.", processedVal is "0", restore to "0."
+            // if initial val was "5.", processedVal is "5", restore to "5."
+            if (val === processedVal + '.') processedVal = val;
+        }
+      }
+
+
+      return processedVal; // string
     } else {
-      // If input is not string (e.g. number from state being cleaned again, though unlikely here)
-      return String(val);
+      return String(val); // If input is not string (e.g. number)
     }
-    return val; // string
   }, []);
 
   const calculateNettoFromBruttoYearly = useCallback((yearlyBrutto) => {
@@ -383,7 +422,50 @@ const PensionCalculator = () => {
     // But we still want to ensure it's a string for setInputs if cleanNumberInput was not called.
     // However, birthYear and birthMonth are now numbers from slider.
 
-    setInputs(prev => ({ ...prev, [name]: Number(value) })); // Ensure value is number for these slider inputs
+    // Corrected state update based on field type
+    let finalValueToSet;
+    const numericFieldsInState = [
+      'birthYear', 'birthMonth', 'workYears', 
+      'avgSalary', 'initialAccumulatedCapital', 
+      'copyrightPercentage', 'pensionContributionRate', 
+      'capitalIndexationRate', 'targetRetirementAge', 
+      'lifeExpectancyAtTargetAgeMonths', 'minimalPension'
+    ];
+
+    if (numericFieldsInState.includes(name)) {
+      // For these fields, 'value' could be a number (from slider) or a string (from cleanNumberInput)
+      // `value` here is the result of cleanNumberInput for text/number fields, or raw number for sliders
+      
+      const allowFloat = floatFields.includes(name);
+      let tempValue = (name === 'birthYear' || name === 'birthMonth') ? value : String(value).trim(); // birthYear/Month от слайдера числа, остальные строки
+
+      if (tempValue === '' && 
+          (name === 'avgSalary' || name === 'initialAccumulatedCapital' || name === 'minimalPension' || 
+           name === 'workYears' || name === 'copyrightPercentage' || name === 'pensionContributionRate' || 
+           name === 'capitalIndexationRate' || name === 'targetRetirementAge' || name === 'lifeExpectancyAtTargetAgeMonths')) {
+        finalValueToSet = ''; // Allow specific numeric TextFields to be cleared to an empty string
+      } else if (tempValue === '') {
+        finalValueToSet = 0; // For other numeric fields (like sliders, if they could be cleared, or non-clearable text fields becoming empty somehow)
+      } else {
+        // tempValue is now a non-empty string (from cleanNumberInput) or a number (from slider for birthYear/Month)
+        const numVal = Number(tempValue);
+
+        if (allowFloat && typeof tempValue === 'string' && tempValue.endsWith('.')) {
+          finalValueToSet = tempValue; // Keep string like "123." or "0." to allow user to continue typing
+        } else if (!isNaN(numVal)) {
+          finalValueToSet = numVal; // Valid number, store as number
+        } else {
+          // Should not happen if cleanNumberInput is robust and sliders provide numbers
+          finalValueToSet = 0; // Fallback for safety
+        }
+      }
+    } else {
+      // For non-numeric fields (e.g., salaryType, salaryPeriod, scenario)
+      finalValueToSet = String(value); // Ensure it's a string
+    }
+    
+    setInputs(prev => ({ ...prev, [name]: finalValueToSet }));
+
 
     // Clear specific errors when user types or slides
     if (errors[name]) {
